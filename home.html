@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container-fluid min-vh-100 d-flex flex-column justify-content-center align-items-center" style="background: linear-gradient(135deg, #e3f2fd, #ffffff);">
+
+
+    <!-- 🔥 Welcome Section -->
+    <div class="text-center mb-5">
+        <h1 class="fw-bold text-primary display-5" style="margin-top: -40px;">
+            🧪 Welcome, {{ user.username }}
+        </h1><br><br>
+        <p class="text-muted fs-5">
+            Manage lab tests, reports and patient diagnostics efficiently..!!
+        </p>
+    </div>
+
+    <!-- 🚀 Cards Section -->
+    <div class="row justify-content-center w-100">
+
+        <!-- All Tests -->
+        <div class="col-md-3 mb-4">
+            <div class="card shadow-lg border-0 rounded-4 text-center p-4 h-100">
+                <h4 class="text-primary">🧾 All Tests</h4>
+                <br>
+                <a href="{% url 'all_tests' %}" 
+                   class="btn btn-primary mt-2 w-75 mx-auto rounded-pill">
+                    <i class="bi bi-file-earmark-medical-fill"></i>
+                    View Tests
+                </a>
+            </div>
+        </div>
+
+        <!-- Dashboard -->
+        <div class="col-md-3 mb-4">
+            <div class="card shadow-lg border-0 rounded-4 text-center p-4 h-100">
+                <h4 class="text-success">📊 Dashboard</h4>
+                <br>
+                <a href="{% url 'dashboard' %}" 
+                   class="btn btn-success mt-2 w-75 mx-auto rounded-pill">
+                    <i class="bi bi-file-earmark-medical-fill"></i>
+                    Open Dashboard
+                </a>
+            </div>
+        </div>
+
+        <!-- Discharge -->
+        <div class="col-md-3 mb-4">
+            <div class="card shadow-lg border-0 rounded-4 text-center p-4 h-100">
+
+                <h4 class="text-danger">🏥 Discharge</h4>
+                <br>    
+                <a href="{% url 'discharge' %}" 
+                class="btn btn-danger mt-2 w-75 mx-auto rounded-pill">
+                    <i class="bi bi-file-earmark-medical-fill"></i> 
+                    Open Discharge
+                </a>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

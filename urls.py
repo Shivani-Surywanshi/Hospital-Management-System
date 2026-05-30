@@ -1,28 +1,12 @@
-"""
-URL configuration for project project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/6.0/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
-from django.contrib import admin
-from django.urls import path,include
-from django.conf.urls.static import static
-from django.conf import settings
+from django.urls import path
+from reportapp import views
 
 urlpatterns = [
-    path('',include('userapp.urls')),
-    path('doctor/', include('doctorapp.urls')),
-    path('report/', include('reportapp.urls')),
-    path('payment/', include('paymentapp.urls')),
-    path('admin/', admin.site.urls),
-] + static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
+    path('register/', views.lab_register, name='lab_register'),
+    path('login/', views.lab_login, name='lab_login'),
+    path('home/', views.lab_home, name='lab_home'),
+    path('tests/', views.all_tests, name='all_tests'),
+    path('dashboard/', views.dashboard, name='dashboard'),
+    path('add/', views.add_test, name='add_test'),
+    path('edit/<int:id>/', views.edit_test, name='edit_test'),
+]

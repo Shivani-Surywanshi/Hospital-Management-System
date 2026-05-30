@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <h2 class="text-center mb-4 fw-bold text-primary">
+        🧪 Available Lab Tests
+    </h2>
+
+    <div class="card shadow-lg p-4">
+
+        <table class="table table-hover text-center align-middle">
+
+            <thead class="table-dark">
+                <tr>
+                    <th>Test Name</th>
+                    <th>Price (₹)</th>
+                    <th>Time Required</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for t in tests %}
+                <tr>
+                    <td class="fw-semibold">{{ t.name }}</td>
+                    <td class="text-success fw-bold">₹{{ t.price }}</td>
+                    <td class="text-muted">{{ t.time }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}

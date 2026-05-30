@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <!-- Header + Add Button -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-primary">📊 Lab Dashboard</h2>
+
+        <a href="{% url 'add_test' %}" class="btn btn-success rounded-pill px-4">
+            <i class="bi bi-plus-circle-fill"></i> Add Test
+        </a>
+
+    </div>
+
+    <!-- Table -->
+    <div class="card shadow-lg p-3">
+
+        <table class="table table-hover align-middle text-center">
+
+            <thead class="table-dark">
+                <tr>
+                    <th>S.No</th> 
+                    <th>Patient</th>
+                    <th>Doctor</th>
+                    <th>Test</th>
+                    <th>Result</th>
+                    <th>Range</th>
+                    <th>Cost</th>
+                    <th>Date</th>
+                    <th>Edit</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for t in tests %}
+                <tr>
+                    <td>{{ forloop.counter0|add:tests.start_index }}</td>
+                    <!-- <td>{{ t.patient_name.user.username }}</td> -->
+                    <td>{{ t.patient_name }}</td>
+                    <td>Dr. {{ t.reffered_by.user.username }}</td>
+                    <td>{{ t.lab_test }}</td>
+                    <td>{{ t.lab_result }}</td>
+                    <td>{{ t.result_range }}</td>
+                    <td class="text-success fw-bold">₹{{ t.test_cost }}</td>
+                    <td>{{ t.created_at|date:"d M Y" }}</td>
+
+                    <!-- ✏️ EDIT BUTTON -->
+                    <td>
+                        <a href="{% url 'edit_test' t.id %}" 
+                        class="btn btn-warning btn-sm">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <!-- Pagination -->
+    <div class="mt-4 d-flex justify-content-center">
+
+        <nav>
+            <ul class="pagination">
+
+                {% if tests.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ tests.previous_page_number }}">
+                        <i class="bi bi-chevron-double-left"></i>
+                    </a>
+                </li>
+                {% endif %}
+
+                <li class="page-item active">
+                    <span class="page-link">
+                        Page {{ tests.number }}
+                    </span>
+                </li>
+
+                {% if tests.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ tests.next_page_number }}">
+                        <i class="bi bi-chevron-double-right"></i>
+                    </a>
+                </li>
+                {% endif %}
+
+            </ul>
+        </nav>
+
+    </div>
+
+</div>
+
+{% endblock %}
