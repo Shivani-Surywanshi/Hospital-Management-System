@@ -1,19 +1,62 @@
 {% extends 'base.html' %}
-
-{% block content %}
-
-<div class="container mt-5 col-md-4">
-    <div class="card shadow p-4">
-        <h3 class="text-center text-success">Lab Login</h3>
-
-        <form method="POST">
+      {% load crispy_forms_tags %}
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    {% block content %}
+    <br>
+    <div class="container">
+      <div class="jumbotron">
+        <div class="card card-body">
+          <h1 style="text-align: center;">User Login</h1>
+          <form action="{% url 'login' %}" method="POST">
             {% csrf_token %}
-            <input type="text" name="username" class="form-control mb-3" placeholder="Username">
-            <input type="password" name="password" class="form-control mb-3" placeholder="Password">
+            <div class="mb-3">
+              <label for="username"  class="form-label">Username</label>
+              <input
+                type="text"
+                class="form-control"
+                id="" name="username"
+                aria-describedby="emailHelp"
+              />
+              <div id="emailHelp" class="form-text">
+                We'll never share your username with anyone else.
+              </div>
+            </div>
+            <div class="mb-3">
+              <label
+                for="exampleInputPassword1"
+               
+                class="form-label"
+                >Password</label
+              >
+              <input
+                type="password"
+                name="password"
+                class="form-control"
+                id=""
+              />
+            </div>
 
-            <button class="btn btn-success w-100">Login</button>
-        </form>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+        </div>
+      </div>
     </div>
-</div>
-
-{% endblock %}
+    {% endblock %}
+  </body>
+</html>

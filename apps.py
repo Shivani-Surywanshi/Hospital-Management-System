@@ -1,5 +1,5 @@
 from django.apps import AppConfig
 
 
-class ReportappConfig(AppConfig):
-    name = 'reportapp'
+class UserappConfig(AppConfig):
+    name = 'userapp'

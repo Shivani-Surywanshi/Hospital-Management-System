@@ -1,22 +1,30 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from reportapp.models import Lab_Tech, Lab_Tests
+from userapp.models import UserDetails
+from django_recaptcha.fields import ReCaptchaField
 
-
-
-class LabTechRegisterationForm(UserCreationForm):
-    emp_id = forms.IntegerField()
-    qualification = forms.CharField(max_length=29)
-    address = forms.CharField(max_length=200)
-    year_of_exp = forms.IntegerField()
-
+class UserForm(forms.ModelForm):
+    password=forms.CharField(widget=forms.PasswordInput)
     class Meta:
-        model = User
-        fields = ['username', 'email', 'password1', 'password2']
+        model=User
+        # fields="__all__"
 
+        fields=['username','email','password']
 
-class LabTestForm(forms.ModelForm):
+class UserProfileForm(forms.ModelForm):
     class Meta:
-        model = Lab_Tests
-        fields = '__all__'
+        model=UserDetails
+
+        fields=['phone','address','street','city','state','zipcode','userpic']
+    captcha=ReCaptchaField()
+
+class UserUpdateForm(forms.ModelForm):
+    class Meta:
+        model=User
+        fields=['username','email']
+
+class UserProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model=UserDetails
+        fields=['phone','address','street','city','state','zipcode','userpic']
+  
