@@ -1,0 +1,156 @@
+<!-- paymentapp/templates/paymentapp/final_bill.html -->
+
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container mt-5 col-md-10">
+
+<div class="card shadow-lg border-0 rounded-4 p-5">
+
+    <div class="text-center mb-4">
+
+        <h2 class="fw-bold text-primary mb-1">
+            🏥 Mental Hospital
+        </h2>
+
+        <p class="text-muted mb-3">
+            Bangalore, Karnataka | Contact: +91 9693829906
+        </p>
+
+        <h1 class="fw-bold text-success">
+            🧾 Final Bill
+        </h1>
+
+    </div>
+
+    <hr>
+
+    <!-- Patient Info -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-4">
+            <div class="bg-light p-3 rounded-3">
+                <strong>Patient :</strong><br>
+                {{ data.patient_name }}
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="bg-light p-3 rounded-3">
+                <strong>Doctor :</strong><br>
+                Dr. {{ data.doctor_name }}
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="bg-light p-3 rounded-3">
+                <strong>Treatment :</strong><br>
+                {{ data.treatment }}
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="bg-light p-3 rounded-3">
+                <strong>Room Type :</strong><br>
+                {{ data.room_type }}
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="bg-light p-3 rounded-3">
+                <strong>Total Days :</strong><br>
+                {{ data.total_days }}
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="bg-light p-3 rounded-3">
+                <strong>Food :</strong><br>
+                {% if data.food_required %}
+                    Yes
+                {% else %}
+                    No
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Charges Table -->
+    <div class="table-responsive">
+
+    <table class="table table-bordered text-center align-middle">
+
+        <thead class="table-dark">
+            <tr>
+                <th>Particular</th>
+                <th>Per Day (₹)</th>
+                <th>Total (₹)</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            <tr>
+                <td>Bed Charges</td>
+                <td>{{ bed_charge }}</td>
+                <td>{{ bed_charge|floatformat:0 }}</td>
+            </tr>
+
+            <tr>
+                <td>Nursing Charges</td>
+                <td>{{ nursing_charge }}</td>
+                <td>{{ nursing_charge|floatformat:0 }}</td>
+            </tr>
+
+            <tr>
+                <td>Doctor Visit</td>
+                <td>{{ doctor_charge }}</td>
+                <td>{{ doctor_charge|floatformat:0 }}</td>
+            </tr>
+
+            <tr>
+                <td>Miscellaneous</td>
+                <td>{{ misc_charge }}</td>
+                <td>{{ misc_charge|floatformat:0 }}</td>
+            </tr>
+
+            <tr class="table-warning">
+                <td>Room Charges</td>
+                <td>{{ daily_total }}  {{ data.total_days }} Days</td>
+                <td>{{ room_total }}</td>
+            </tr>
+
+            <tr>
+                <td>Food Charges</td>
+                <td>480</td>
+                <td>{{ food_total }}</td>
+            </tr>
+
+            <tr>
+                <td>Medicine Charges</td>
+                <td>{{ medicine_percent }}%</td>
+                <td>{{ medicine_charge|floatformat:2 }}</td>
+            </tr>
+
+            <tr class="table-success fw-bold fs-5">
+                <td colspan="2">Grand Total</td>
+                <td>₹{{ total|floatformat:2 }}</td>
+            </tr>
+
+        </tbody>
+
+    </table>
+
+    </div>
+
+    <div class="text-center mt-4">
+        <button onclick="window.print()" class="btn btn-success px-5 rounded-pill">
+            <i class="bi bi-printer-fill"></i> Print Bill
+        </button>
+    </div>
+
+</div>
+</div>
+
+{% endblock %}

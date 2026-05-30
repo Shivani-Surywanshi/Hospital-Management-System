@@ -1,69 +1,72 @@
 from django import forms
-from django.contrib.auth.models import User
-from doctorapp.models import DoctorDetails, Appointment
-from django_recaptcha.fields import ReCaptchaField
+from paymentapp.models import DischargeSummary
+from doctorapp.models import DoctorDetails, Treatment
+from reportapp.models import Lab_Tests
 
 
-class DoctorForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput)
+class DischargeSummaryForm(forms.ModelForm):
 
-    class Meta:
-        model = User
-        fields = ['username', 'email', 'password']
-
-
-class DoctorProfileForm(forms.ModelForm):
-    captcha = ReCaptchaField()
-
-    class Meta:
-        model = DoctorDetails
-        fields = ['specialization', 'experience', 'hospital', 'phone', 'doctor_pic']
-
-
-class DoctorUpdateForm(forms.ModelForm):
-    class Meta:
-        model = User
-        fields = ['username', 'email']
-
-
-class DoctorProfileUpdateForm(forms.ModelForm):
-    class Meta:
-        model = DoctorDetails
-        fields = ['specialization', 'experience', 'hospital', 'phone', 'doctor_pic']
-
-
-class AppointmentForm(forms.ModelForm):
-    consultation_charge = forms.CharField(
-        initial="500",
-        disabled=True,
-        widget=forms.TextInput(attrs={
-            'class': 'form-control'
+    patient_name = forms.ModelChoiceField(
+        queryset=Lab_Tests.objects.all(),
+        empty_label="Select Patient",
+        widget=forms.Select(attrs={
+            'class': 'form-select'
         })
     )
 
-    TIME_SLOTS = [
-        ('10:00-12:00', '10:00-12:00'),
-        ('12:00-14:00', '12:00-14:00'),
-        ('15:00-17:00', '15:00-17:00'),
-    ]
+    doctor_name = forms.ModelChoiceField(
+        queryset=DoctorDetails.objects.all(),
+        empty_label="Select Doctor",
+        widget=forms.Select(attrs={
+            'class': 'form-select'
+        })
+    )
 
-    time_slot = forms.ChoiceField(
-        choices=TIME_SLOTS,
-        widget=forms.Select(attrs={'class': 'form-control'})
+    treatment = forms.ModelChoiceField(
+        queryset=Treatment.objects.all(),
+        empty_label="Select Treatment",
+        widget=forms.Select(attrs={
+            'class': 'form-select'
+        })
     )
 
     class Meta:
-        model = Appointment
-        fields = ['doctor', 'date', 'time_slot', 'consultation_charge']
+        model = DischargeSummary
+        fields = '__all__'
 
         widgets = {
-            'doctor': forms.Select(attrs={
-                'class': 'form-control'
+
+            'description': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 3,
+                'placeholder': 'Enter treatment / discharge summary'
             }),
 
-            'date': forms.DateInput(attrs={
-                'type': 'text',
+            'doa': forms.DateInput(attrs={
+                'type': 'date',
                 'class': 'form-control',
-                'placeholder': 'YYYY-MM-DD'
+                'id': 'doa'
+            }),
+
+            'dod': forms.DateInput(attrs={
+                'type': 'date',
+                'class': 'form-control',
+                'id': 'dod'
+            }),
+
+            'room_type': forms.Select(attrs={
+                'class': 'form-select'
+            }),
+
+            'food_required': forms.Select(
+                choices=[(True, 'Yes'), (False, 'No')],
+                attrs={'class': 'form-select'}
+            ),
+
+            'total_days': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'id': 'total_days',
+                'readonly': True,
+                'placeholder': 'Auto Calculated'
             }),
         }

@@ -1,0 +1,97 @@
+<!-- paymentapp/templates/paymentapp/discharge_summary.html -->
+
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container mt-5 col-md-8">
+
+<div class="card shadow-lg border-0 rounded-4 p-5">
+
+    <div class="text-center mb-4">
+        <h1 class="fw-bold text-danger">
+            🏥 Discharge Summary
+        </h1>
+    </div>
+
+<form method="POST">
+{% csrf_token %}
+
+<div class="row g-4">
+
+    <div class="col-md-6">
+        <label class="form-label fw-semibold">Patient Name</label>
+        {{ form.patient_name }}
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label fw-semibold">Doctor Name</label>
+        {{ form.doctor_name }}
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label fw-semibold">Treatment</label>
+        {{ form.treatment }}
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label fw-semibold">Room Type</label>
+        {{ form.room_type }}
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label fw-semibold">Date of Admission</label>
+        {{ form.doa }}
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label fw-semibold">Date of Discharge</label>
+        {{ form.dod }}
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label fw-semibold">Food Required</label>
+        {{ form.food_required }}
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label fw-semibold">Total Days</label>
+        {{ form.total_days }}
+    </div>
+
+    <div class="col-12">
+        <label class="form-label fw-semibold">Description</label>
+        {{ form.description }}
+    </div>
+
+</div>
+
+<button class="btn btn-danger w-100 mt-4 rounded-pill">
+    <i class="bi bi-receipt-cutoff"></i> Generate Final Bill
+</button>
+
+</form>
+
+</div>
+</div>
+
+<script>
+document.getElementById("doa").addEventListener("change", calculateDays);
+document.getElementById("dod").addEventListener("change", calculateDays);
+
+function calculateDays() {
+    let doa = document.getElementById("doa").value;
+    let dod = document.getElementById("dod").value;
+
+    if(doa && dod){
+        let start = new Date(doa);
+        let end = new Date(dod);
+
+        let diff = end - start;
+        let days = diff / (1000 * 60 * 60 * 24);
+
+        document.getElementById("total_days").value = days + 1;
+    }
+}
+</script>
+
+{% endblock %}

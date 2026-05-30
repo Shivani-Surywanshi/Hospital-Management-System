@@ -1,196 +1,109 @@
 from django.shortcuts import render, redirect
-from doctorapp.forms import AppointmentForm, DoctorForm, DoctorProfileForm, DoctorUpdateForm, DoctorProfileUpdateForm
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
-from doctorapp.models import DoctorDetails
-from django.contrib import messages
-from doctorapp.models import Treatment
-from django.core.paginator import Paginator
+from paymentapp.forms import DischargeSummaryForm
+from paymentapp.models import DischargeSummary
 
 
-
-# Doctor Home
-def doctor_home(request):
-    return render(request, 'doctorapp/doctor_home.html')
-
-
-# Doctor Registration
-def doctor_register(request):
-    registered = False
-
+def discharge(request):
     if request.method == 'POST':
-        form1 = DoctorForm(request.POST)
-        form2 = DoctorProfileForm(request.POST, request.FILES)
-
-        if form1.is_valid() and form2.is_valid():
-            user = form1.save()
-            user.set_password(user.password)
-            user.save()
-
-            profile = form2.save(commit=False)
-            profile.user = user
-            profile.save()
-
-            registered = True
-            messages.success(request, "Doctor registered successfully ✅")  
-
-        else:
-            messages.error(request, "Please correct the errors below ❌")  
-
-    else:
-        form1 = DoctorForm()
-        form2 = DoctorProfileForm()
-
-    return render(request, 'doctorapp/doctor_register.html', {
-        'form1': form1,
-        'form2': form2,
-        'registered': registered
-    })
-
-
-# ✅ FIXED Doctor Login
-def doctor_login(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-
-        user = authenticate(username=username, password=password)
-
-        if user:
-            # ✅ Allow only doctors
-            if hasattr(user, 'doctordetails'):
-                if user.is_active:
-                    login(request, user)
-                    messages.success(request, "Login successful ✅")
-                    return redirect('doctor_dashboard')
-                else:
-                    messages.error(request, "Account not active ❌")
-            else:
-                messages.error(request, "Invalid Doctor credentials ❌")
-        else:
-            messages.error(request, "Invalid username or password ❌")
-
-    return render(request, 'doctorapp/doctor_login.html')
-
-
-# Doctor List
-@login_required(login_url='doctor_login')
-def doctor_list(request):
-    doctors = DoctorDetails.objects.all()
-    return render(request, 'doctorapp/doctor_list.html', {'doctors': doctors})
-
-
-# Logout
-@login_required(login_url='doctor_login')
-def doctor_logout(request):
-    logout(request)
-    messages.success(request, "Logged out successfully 👋")
-    return redirect('doctor_login')
-
-
-# Doctor Dashboard
-@login_required(login_url='doctor_login')
-def doctor_dashboard(request):
-    return render(request, 'doctorapp/doctor_dashboard.html')
-
-
-# Doctor Profile
-@login_required(login_url='doctor_login')
-def doctor_profile(request):
-    return render(request, 'doctorapp/doctor_profile.html')
-
-
-@login_required(login_url='doctor_login')
-def doctor_update(request):
-    if request.method == 'POST':
-        form = DoctorUpdateForm(request.POST, instance=request.user)
-        form1 = DoctorProfileUpdateForm(request.POST, request.FILES, instance=request.user.doctordetails)
-
-        if form.is_valid() and form1.is_valid():
-            form.save()
-            form1.save()
-            from django.contrib import messages
-            messages.success(request, "Profile updated successfully ✅")
-            return redirect('doctor_profile')
-        else:
-            from django.contrib import messages
-            messages.error(request, "Update failed ❌")
-
-    else:
-        form = DoctorUpdateForm(instance=request.user)
-        form1 = DoctorProfileUpdateForm(instance=request.user.doctordetails)
-
-    return render(request, 'doctorapp/doctor_update.html', {
-        'form': form,
-        'form1': form1
-    })
-
-
-def treatment_list(request):
-    treatments = Treatment.objects.all()
-    return render(request, 'doctorapp/treatment_list.html', {'treatments': treatments})
-
-
-def doctors_by_treatment(request, id):
-    doctors = Treatment.objects.filter(id=id)
-
-    if doctors.exists():
-        doctors = doctors
-    else:
-        doctors = None
-
-    return render(request, 'doctorapp/doctors_by_treatment.html', {'doctors': doctors})
-
-
-def book_appointment(request, id):
-    treatment = Treatment.objects.get(id=id)
-
-    if request.method == 'POST':
-        form = AppointmentForm(request.POST)
+        form = DischargeSummaryForm(request.POST)
 
         if form.is_valid():
-            appointment = form.save(commit=False)   
-            appointment.treatment = treatment 
-            appointment.user = request.user       
-            appointment.save()
-
-            from django.contrib import messages
-            messages.success(request, "Appointment Booked Successfully ✅")
-
-            return redirect('treatment_list')
+            obj = form.save()
+            return redirect('final_bill', obj.id)
 
     else:
-        form = AppointmentForm()
+        form = DischargeSummaryForm()
 
-    return render(request, 'doctorapp/book_appointment.html', {
-        'form': form,
-        'treatment': treatment
+    return render(request, 'paymentapp/discharge_summary.html', {
+        'form': form
     })
 
 
+def final_bill(request, id):
+    data = DischargeSummary.objects.get(id=id)
 
-@login_required(login_url='doctor_login')
-def doctor_list(request):
-    doctor_data = DoctorDetails.objects.all()
+    room_charges = {
+        'Common Ward': {
+            'bed': 250,
+            'nursing': 300,
+            'doctor': 250,
+            'misc': 100,
+            'medicine_percent': 10
+        },
 
-    paginator = Paginator(doctor_data, 6)
-    page = request.GET.get('page')
-    doctors = paginator.get_page(page)
+        'Semi Private': {
+            'bed': 1000,
+            'nursing': 1000,
+            'doctor': 550,
+            'misc': 250,
+            'medicine_percent': 12
+        },
 
-    return render(request, 'doctorapp/doctor_list.html', {
-        'doctors': doctors
-    })
+        'Private AC': {
+            'bed': 1550,
+            'nursing': 1250,
+            'doctor': 650,
+            'misc': 350,
+            'medicine_percent': 15
+        },
 
+        'Private Non AC': {
+            'bed': 1250,
+            'nursing': 1150,
+            'doctor': 650,
+            'misc': 350,
+            'medicine_percent': 13
+        },
 
+        'Deluxe': {
+            'bed': 2000,
+            'nursing': 1500,
+            'doctor': 850,
+            'misc': 500,
+            'medicine_percent': 20
+        }
+    }
 
-@login_required(login_url='login')
-def treatment_list(request):
-    treatment_data = Treatment.objects.all()
+    charges = room_charges[data.room_type]
 
-    paginator = Paginator(treatment_data, 6)
-    page = request.GET.get('page')
-    treatments = paginator.get_page(page)
+    # Per Day Total
+    daily_total = (
+        charges['bed'] +
+        charges['nursing'] +
+        charges['doctor'] +
+        charges['misc']
+    )
 
-    return render(request, 'doctorapp/treatment_list.html', {
-        'treatments': treatments
+    # Room Charges
+    room_total = daily_total * data.total_days
+
+    # Food Charges
+    food_per_day = 480
+
+    if data.food_required:
+        food_total = food_per_day * data.total_days
+    else:
+        food_total = 0
+
+    # Medicine Charges
+    medicine_charge = (room_total * charges['medicine_percent']) / 100
+
+    # Final Total
+    total = room_total + food_total + medicine_charge
+
+    return render(request, 'paymentapp/final_bill.html', {
+        'data': data,
+
+        'bed_charge': charges['bed'],
+        'nursing_charge': charges['nursing'],
+        'doctor_charge': charges['doctor'],
+        'misc_charge': charges['misc'],
+
+        'room_total': room_total,
+        'food_total': food_total,
+
+        'medicine_percent': charges['medicine_percent'],
+        'medicine_charge': medicine_charge,
+
+        'total': total
     })
