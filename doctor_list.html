@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-4">
+    <h2 class="text-center mb-4">All Doctors</h2>
+
+    <div class="row">
+        {% for doc in doctors %}
+        <div class="col-md-4">
+            <div class="card shadow-lg mb-4" style="border-radius: 20px;">
+
+                {% if doc.doctor_pic %}
+                <img src="{{ doc.doctor_pic.url }}" class="card-img-top"
+                    style="border-top-left-radius: 20px; border-top-right-radius: 20px;" height="250">
+                {% else %}
+                <img src="/static/images/avatar.jpg" class="card-img-top"
+                    style="border-top-left-radius: 20px; border-top-right-radius: 20px;">
+                {% endif %}
+
+                <div class="card-body">
+                    <h5 class="card-title">Dr. {{ doc.user.username }}</h5>
+                    <p class="card-text">
+                        <strong>Specialization:</strong> {{ doc.specialization }} <br>
+                        <strong>Experience:</strong> {{ doc.experience }} years <br>
+                        <strong>Hospital:</strong> {{ doc.hospital }} <br>
+                        <strong>Phone:</strong> {{ doc.phone }}
+                    </p>
+                </div>
+
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    <div class="d-flex justify-content-center mt-4">
+        <nav>
+            <ul class="pagination">
+
+                {% if doctors.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ doctors.previous_page_number }}">
+                        <i class="bi bi-chevron-double-left"></i>
+                    </a>
+                </li>
+                {% endif %}
+
+                <li class="page-item active">
+                    <span class="page-link">
+                        Page {{ doctors.number }}
+                    </span>
+                </li>
+
+                {% if doctors.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ doctors.next_page_number }}">
+                        <i class="bi bi-chevron-double-right"></i>
+                    </a>
+                </li>
+                {% endif %}
+
+            </ul>
+        </nav>
+    </div>
+
+</div>
+
+
+{% endblock %}

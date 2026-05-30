@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Available Treatments 💊</h2>
+
+    <h3 class="text-center text-muted">
+        Total Treatments: {{ treatments|length }}
+    </h3>
+
+    {% if treatments %}
+
+    <div class="row">
+
+        {% for t in treatments %}
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-lg h-100" style="border-radius: 20px;">
+
+                <div class="card-body">
+                    <h5 class="card-title text-primary">
+                        {{ t.treatment_name }}
+                    </h5>
+
+                    <p><strong>Category:</strong> {{ t.category }}</p>
+                    <p><strong>Doctor:</strong> Dr. {{ t.doctor.user.username }}</p>
+
+                    <p>{{ t.description }}</p>
+
+                    <p><strong>Do's:</strong> {{ t.dos }}</p>
+                    <p><strong>Don'ts:</strong> {{ t.donts }}</p>
+
+                    <a href="{% url 'doctors_by_treatment' t.id %}" class="btn btn-primary">
+                        View Doctors
+                    </a>
+                    
+                </div>
+
+            </div>
+        </div>
+        {% endfor %}
+
+    </div>
+
+    {% else %}
+
+    <!-- ✅ IF NO DATA -->
+    <h4 class="text-center text-muted mt-5">
+        No treatments available yet 💊
+    </h4>
+
+    {% endif %}
+
+    <!-- Pagination -->
+    <div class="d-flex justify-content-center mt-4">
+        <nav>
+            <ul class="pagination">
+
+                {% if treatments.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ treatments.previous_page_number }}">
+                        <i class="bi bi-chevron-double-left"></i>
+                    </a>
+                </li>
+                {% endif %}
+
+                <li class="page-item active">
+                    <span class="page-link">
+                        Page {{ treatments.number }}
+                    </span>
+                </li>
+
+                {% if treatments.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ treatments.next_page_number }}">
+                        <i class="bi bi-chevron-double-right"></i>
+                    </a>
+                </li>
+                {% endif %}
+
+            </ul>
+        </nav>
+    </div>
+
+</div>
+
+
+{% endblock %}

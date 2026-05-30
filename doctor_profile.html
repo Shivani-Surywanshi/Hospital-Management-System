@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container mt-5">
+    <div class="row">
+
+        <!-- Left Side (Details) -->
+        <div class="col-md-6">
+            <h2 class="fw-bold text-success mb-3">
+                Dr. {{ user.username }}'s Profile 👨‍⚕️
+            </h2>
+
+            <div class="mt-3">
+
+                <div class="row mb-2">
+                    <div class="col-4"><strong>Email:</strong></div>
+                    <div class="col-8">{{ user.email }}</div>
+                </div>
+
+                <div class="row mb-2">
+                    <div class="col-4"><strong>Specialization:</strong></div>
+                    <div class="col-8">{{ user.doctordetails.specialization }}</div>
+                </div>
+
+                <div class="row mb-2">
+                    <div class="col-4"><strong>Experience:</strong></div>
+                    <div class="col-8">{{ user.doctordetails.experience }} years</div>
+                </div>
+
+                <div class="row mb-2">
+                    <div class="col-4"><strong>Hospital:</strong></div>
+                    <div class="col-8">{{ user.doctordetails.hospital }}</div>
+                </div>
+
+                <div class="row mb-2">
+                    <div class="col-4"><strong>Phone:</strong></div>
+                    <div class="col-8">{{ user.doctordetails.phone }}</div>
+                </div>
+
+            </div>
+
+            <br>
+
+            <!-- Update button (optional future) -->
+            <a href="{% url 'doctor_update' %}" class="btn btn-warning">
+                Update Profile
+            </a>
+
+        </div>
+
+        <!-- Right Side (Image) -->
+        <div class="col-md-6 text-center">
+            <h5>Doctor Image</h5>
+
+            {% if user.doctordetails.doctor_pic %}
+                <img src="{{ user.doctordetails.doctor_pic.url }}" 
+                     height="350" width="350" 
+                     style="border-radius: 20%;">
+            {% else %}
+                <img src="{% static 'images/avatar.jpg' %}" 
+                     height="200">
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

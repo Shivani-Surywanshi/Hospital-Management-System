@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<div class="container mt-5">
+    <div class="card p-4 shadow">
+        <h2 class="text-center text-success">Update Doctor Profile 👨‍⚕️</h2>
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            {{ form.username|as_crispy_field }}
+            {{ form.email|as_crispy_field }}
+
+            <hr>
+
+            {{ form1.specialization|as_crispy_field }}
+            {{ form1.experience|as_crispy_field }}
+            {{ form1.hospital|as_crispy_field }}
+            {{ form1.phone|as_crispy_field }}
+            {{ form1.doctor_pic|as_crispy_field }}
+
+            <br>
+
+            <button class="btn btn-warning w-100 fw-bold">
+                Update Profile
+            </button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <!-- Heading -->
+    <div class="text-center mb-5">
+        <h1 class="fw-bold text-primary display-6">
+            👨‍⚕️ Doctors Available
+        </h1>
+        <p class="text-muted fs-5">
+            Book your appointment with our expert doctors
+        </p>
+    </div><br><br>
+
+    <div class="row g-4 justify-content-center">
+
+        {% if doctors %}
+
+            {% for d in doctors %}
+            <div class="col-md-4">
+
+                <div class="card border-0 shadow-lg h-100 rounded-4 doctor-card">
+
+                    <div class="card-body text-center p-4"><br>
+
+                        <!-- Doctor Name -->
+                        <h4 class="fw-bold text-dark mb-2">
+                            Dr. {{ d.doctor.user.username }}
+                        </h4>
+
+                        <!-- Specialization -->
+                        <span class="badge bg-info text-dark px-3 py-2 mb-3 fs-6">
+                            {{ d.category }}
+                        </span>
+
+                        <!-- Button -->
+                        <a href="{% url 'book_appointment' d.id %}" 
+                           class="btn btn-warning w-100 mt-3 rounded-pill fw-semibold">
+                            <i class="bi bi-calendar-check"></i> Book Appointment
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+            {% endfor %}
+
+        {% else %}
+
+            <div class="text-center mt-5">
+                <h4 class="text-danger fw-bold">
+                    No doctors available ❌
+                </h4>
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+<style>
+.doctor-card{
+    transition: all 0.3s ease;
+}
+
+.doctor-card:hover{
+    transform: translateY(-8px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+}
+</style>
+
+{% endblock %}

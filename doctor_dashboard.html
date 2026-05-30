@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<br>
+
+<div class="row justify-content-center mb-4">
+    <div class="col-md-12">
+        <div class="card shadow p-5 text-center d-flex flex-column justify-content-center align-items-center"
+             style="min-height: 750px; background: linear-gradient(135deg, #e2dddd, #ffffff);">
+
+            <!-- Welcome Text -->
+            <h2 class="fw-bold text-dark mb-4 text-start w-50">
+                Welcome..
+            </h2>
+
+            <!-- Doctor Name (Big Font) -->
+            <h1 class="fw-bold text-danger display-1 mb-4">
+                Dr. {{ user.username }} 👨‍⚕️
+            </h1>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

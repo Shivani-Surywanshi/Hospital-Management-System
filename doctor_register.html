@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<div class="container mt-5">
+    <div class="card p-4 shadow">
+
+        {% if registered %}
+            <!--  SUCCESS MESSAGE -->
+            <div class="alert alert-success text-center">
+                <h3>✅ Thank You for Registration!</h3>
+                <p>Now you can 
+                    <a href="{% url 'doctor_login' %}" class="btn btn-success btn-sm">
+                        Login
+                    </a>
+                </p>
+            </div>
+
+        {% else %}
+
+        <h2 class="text-center mb-4">Doctor Registration 👨‍⚕️</h2>
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <!-- User fields -->
+            <div class="row">
+                <div class="col-md-6">
+                    {{ form1.username|as_crispy_field }}
+                </div>
+                <div class="col-md-6">
+                    {{ form1.email|as_crispy_field }}
+                </div>
+            </div>
+
+
+            <!-- Doctor fields -->
+            {{ form2.specialization|as_crispy_field }}
+            {{ form2.experience|as_crispy_field }}
+            {{ form2.hospital|as_crispy_field }}
+            {{ form2.phone|as_crispy_field }}
+            {{ form2.doctor_pic|as_crispy_field }}
+
+
+            {{ form1.password|as_crispy_field }}
+
+
+            <!--  CAPTCHA (IMPORTANT) -->
+            <div class="mt-3 text-center">
+                {{ form2.captcha|as_crispy_field }}
+            </div>
+
+            <br>
+
+            <!-- Submit -->
+            <button class="btn btn-primary" type="submit">
+                Register
+            </button>
+        </form>
+
+        {% endif %}
+
+    </div>
+</div>
+
+{% endblock %}
